@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.mapstruct.Mapper;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,16 +45,19 @@ public class PersonService {
                 .collect(Collectors.toList());
     }
 
-    public PersonDTO findById(Long id) throws PersonNotFoundException {
-        Person person = personRepository.findById(id)
-                .orElseThrow(() -> new PersonNotFoundException(id));
-//        //Optional<Person> optionalPerson = personRepository.findById(id);
-//        if(optionalPerson.isEmpty()){
-//            throw new PersonNotFoundException(id);
-//        }
-        return personMapper.toDTO(person);
-
+    private Person verifyIdExists(Long id) throws PersonNotFoundException{
+        return personRepository.findById(id)
+                .orElseThrow(()-> new PersonNotFoundException(id));
     }
 
+    public PersonDTO findById(Long id) throws PersonNotFoundException {
+        Person person = verifyIdExists(id);
+        return personMapper.toDTO(person);
+    }
+
+    public void delete(Long id) throws PersonNotFoundException{
+        verifyIdExists(id);
+        personRepository.deleteById(id);
+    }
 
 }
