@@ -1,28 +1,21 @@
-package one.digitalinnovatio.personapijava.dto.request;
+package one.digitalinnovation.personapi.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import one.digitalinnovatio.personapijava.enums.PhoneType;
 import org.hibernate.validator.constraints.br.CPF;
 
-import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 import java.util.List;
-
-
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonDTO {
-
 
     private Long id;
 
@@ -38,12 +31,9 @@ public class PersonDTO {
     @CPF
     private String cpf;
 
-
-    @JsonFormat(pattern="dd-MM-yyyy")
-    private LocalDate birthDate;
+    private String birthDate;
 
     @Valid
     @NotEmpty
     private List<PhoneDTO> phones;
-
 }
