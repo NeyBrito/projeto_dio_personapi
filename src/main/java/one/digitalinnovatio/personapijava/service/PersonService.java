@@ -1,5 +1,6 @@
 package one.digitalinnovatio.personapijava.service;
 
+import lombok.AllArgsConstructor;
 import one.digitalinnovatio.personapijava.dto.MessageResponseDTO;
 import one.digitalinnovatio.personapijava.dto.request.PersonDTO;
 import one.digitalinnovatio.personapijava.entity.Person;
@@ -17,17 +18,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class PersonService {
 
     private PersonRepository personRepository;
-
     private final PersonMapper personMapper = PersonMapper.INSTANCE;
-
-    @Autowired
-    public PersonService(PersonRepository personRepository) {
-
-        this.personRepository = personRepository;
-    }
 
     public MessageResponseDTO createPerson(PersonDTO personDTO){
         Person personToSave = PersonMapper.INSTANCE.toModel(personDTO);
@@ -41,35 +36,24 @@ public class PersonService {
                 .map(personMapper::toDTO)
                 .collect(Collectors.toList());
     }
-
-
-
     public PersonDTO findById(Long id) throws PersonNotFoundException {
         Person person = verifyIdExists(id);
         return personMapper.toDTO(person);
     }
-
     public void delete(Long id) throws PersonNotFoundException{
         verifyIdExists(id);
         personRepository.deleteById(id);
     }
-
-
-
     public MessageResponseDTO updateById(Long id, PersonDTO personDTO) throws PersonNotFoundException {
         verifyIdExists(id);
         Person personToUpdate = PersonMapper.INSTANCE.toModel(personDTO);
-
         Person uptatePerson = personRepository.save(personToUpdate);
         return createMessageResponse(uptatePerson.getId(), "Updated person with ID ");
-
     }
-
     private Person verifyIdExists(Long id) throws PersonNotFoundException{
         return personRepository.findById(id)
                 .orElseThrow(()-> new PersonNotFoundException(id));
     }
-
     private MessageResponseDTO createMessageResponse(Long id, String s) {
         return MessageResponseDTO
                 .builder()
