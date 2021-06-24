@@ -1,4 +1,4 @@
-package one.digitalinnovatio.personapijava.dto.message;
+package one.digitalinnovatio.personapijava.dto;
 
 import lombok.Builder;
 import lombok.Data;
